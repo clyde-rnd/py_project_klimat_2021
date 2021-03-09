@@ -150,6 +150,11 @@ def nazhali_start():
             loopp = win.after(10000, checkbutton_start_stop)
 
 def checkbutton_start_stop():
+    """"
+    Коментарий
+
+    Старт стоп
+    """
     s = start_stop_zhach.get()
     print(s, 'Какая кнопка нажата сейчас')
     if s == False:
