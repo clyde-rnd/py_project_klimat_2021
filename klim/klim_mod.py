@@ -151,9 +151,9 @@ def nazhali_start():
 
 def checkbutton_start_stop():
     """"
-    Коментарий доб
+    Функция обрабатывает нажатие на кнопку старт\стоп
 
-    Старт стоп
+    Вызывая вункции nazhali_stop или nazhali_start
     """
     s = start_stop_zhach.get()
     print(s, 'Какая кнопка нажата сейчас')
