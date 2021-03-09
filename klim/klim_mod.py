@@ -151,7 +151,7 @@ def nazhali_start():
 
 def checkbutton_start_stop():
     """"
-    Коментарий
+    Коментарий доб
 
     Старт стоп
     """
