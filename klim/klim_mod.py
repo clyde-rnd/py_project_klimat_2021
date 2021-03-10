@@ -192,6 +192,7 @@ win.grid_rowconfigure(1, minsize=220)
 win.grid_rowconfigure(0, minsize=10)
 
 vibor_com_porta()
+
 start_button = tk.Checkbutton(win, textvariable=start_stop_text,
                         variable = start_stop_zhach,
                         onvalue = True,
