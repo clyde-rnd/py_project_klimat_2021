@@ -3,7 +3,6 @@ from check_serial_ports import serial_ports
 from tkinter import ttk
 import serial
 
-
 class WindowKlim:
 
     def __init__(self, imag='icont.png'):
@@ -78,6 +77,7 @@ class WindowKlim:
                          font=('Arial', 25, 'bold'),
                  )
         return lable
+
     def destroy_lable(self):
         if self.lable_t and self.lable_t:
             self.lable_t.destroy()
@@ -159,7 +159,6 @@ class WindowKlim:
         self.vibor_com_porta()
         self.button_start_stop_drow()
         self.win.mainloop()
-
 
 if __name__ == "__main__":
     window = WindowKlim()
