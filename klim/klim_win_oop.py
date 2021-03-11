@@ -20,7 +20,8 @@ class WindowKlim:
         self.win.grid_columnconfigure(1, minsize=220)
         self.win.grid_rowconfigure(1, minsize=220)
         self.win.grid_rowconfigure(0, minsize=10)
-        self.lable1=False
+        self.lable_t = False
+        self.lable_v = False
         self.loop_start_stop=False
 
     def button_start_stop_drow(self):
@@ -65,7 +66,7 @@ class WindowKlim:
             data_serial = serial_port_read.readline()
             print(data_serial)
             serial_port_read.close()
-            return '_t_ b _v_'
+            return '_27.0_ b _45.0_'
         except (OSError, serial.SerialException) as oshimka_chteniya_com:
             print(oshimka_chteniya_com)
             return False
@@ -79,7 +80,8 @@ class WindowKlim:
         return lable
     def destroy_lable(self):
         if self.lable_t and self.lable_t:
-            self.lable1.destroy()
+            self.lable_t.destroy()
+            self.lable_v.destroy()
         else:
             pass
 
@@ -100,9 +102,10 @@ class WindowKlim:
         self.rezultat_chteniya_com = self.chtenie_com_porta(self.select_com)
         if self.rezultat_chteniya_com:
             sortirovka_rez_chten_com = self.rezultat_chteniya_com.split('_')
-            if len(sortirovka_rez_chten_com) == 3:
+            print(sortirovka_rez_chten_com)
+            if len(sortirovka_rez_chten_com) == 5:
                 self.t = ''.join(sortirovka_rez_chten_com[1])
-                self.v = ''.join(sortirovka_rez_chten_com[2])
+                self.v = ''.join(sortirovka_rez_chten_com[3])
                 self.drow_lable_t_and_v()
             else:
                 self.start_stop_zhach.set(False)
@@ -124,17 +127,17 @@ class WindowKlim:
         t1 = float(self.t)
         v1 = float(self.v)
         if 26.0 > t1 > 17.0:
-            self.lable_t = draw_lable(self.t, color_lb_t, color_font, idex_t)
+            self.lable_t = self.draw_lable(self.t, color_lb_t, color_font, idex_t)
         elif t1 >= 26.00:
-            self.lable_t = draw_lable(t, color_lb_t_2, color_font, idex_t)
+            self.lable_t = self.draw_lable(self.t, color_lb_t_2, color_font, idex_t)
         elif t1 <= 17.00:
-            self.lable_t = draw_lable(t, color_lb_t_3, color_font, idex_t)
+            self.lable_t = self.draw_lable(self.t, color_lb_t_3, color_font, idex_t)
         if 80.0 > v1 > 20.0:
-            self.lable_v = draw_lable(v, color_lb_v, color_font, idex_v)
+            self.lable_v = self.draw_lable(self.v, color_lb_v, color_font, idex_v)
         elif v1 >= 80.0:
-            self.lable_v = draw_lable(v, color_lb_v_2, color_font, idex_v)
+            self.lable_v = self.draw_lable(self.v, color_lb_v_2, color_font, idex_v)
         elif v1 <= 20.0:
-            self.lable_v = draw_lable(v, color_lb_v_3, color_font, idex_v)
+            self.lable_v = self.draw_lable(v, color_lb_v_3, color_font, idex_v)
         self.lable_t.grid(row=1, column=1, stick='wens', padx=20, pady=10)
         self.lable_v.grid(row=1, column=0, stick='wens', padx=20, pady=10)
 
