@@ -142,8 +142,6 @@ class WindowKlim:
         self.lable_v.grid(row=1, column=0, stick='wens', padx=20, pady=10)
 
 
-
-
     def otslezhivanie_nazhatiya_start_stop(self):
         start_or_stop_zbach=self.start_stop_zhach.get()
         print(start_or_stop_zbach)
