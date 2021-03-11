@@ -1,6 +1,7 @@
 import tkinter as tk
 from check_serial_ports import serial_ports
 from tkinter import ttk
+import serial
 
 
 class WindowKlim:
@@ -51,6 +52,24 @@ class WindowKlim:
         self.combo_com.current(self.poumolchaniu_com)
         self.combo_com.grid(row=0, column=0, stick='wens', padx=20, pady=10)
 
+    def chtenie_com_porta(self, select_com):
+        try:
+            serial_port_read = serial.Serial(
+                port=select_com,
+                baudrate=9600,
+                parity=serial.PARITY_ODD,
+                stopbits=serial.STOPBITS_TWO,
+                bytesize=serial.SEVENBITS, timeout=1
+            )
+            print(serial_port_read)
+            data_serial = serial_port_read.readline()
+            print(data_serial)
+            serial_port_read.close()
+            return '_t_ b _v_'
+        except (OSError, serial.SerialException) as oshimka_chteniya_com:
+            print(oshimka_chteniya_com)
+            return False
+
     def draw_lable(self, text_param, color_lb, color_font, idex):
         lable=tk.Label(self.win, text=f"{text_param} {idex}",
                          bg=color_lb,
@@ -59,13 +78,14 @@ class WindowKlim:
                  )
         return lable
     def destroy_lable(self):
-        if self.lable1:
+        if self.lable_t and self.lable_t:
             self.lable1.destroy()
         else:
             pass
 
     def nazhali_stop(self):
-        self.win.after_cancel(self.loop_start_stop)
+        if self.loop_start_stop:
+            self.win.after_cancel(self.loop_start_stop)
         self.destroy_lable()
         self.vibor_com_porta()
         self.start_stop_text.set('Start')
@@ -76,21 +96,63 @@ class WindowKlim:
         self.destroy_lable()
         self.start_stop_text.set("Stop")
         self.combo_com['state'] = 'disabled'
-        self.lable1 = self.draw_lable("Мой лйбл", '#4BC98A', "#000000", "27")
-        self.lable1.grid(row=1, column=0, stick='wens', padx=20, pady=10)
-        print('Нажали кнопку START')
-        if self.loop_start_stop:
-            print(self.loop_start_stop)
-        self.loop_start_stop = self.win.after(10000, self.otslezhivanie_nazhatiya_start_stop)
+        self.select_com = self.combo_com.get()
+        self.rezultat_chteniya_com = self.chtenie_com_porta(self.select_com)
+        if self.rezultat_chteniya_com:
+            sortirovka_rez_chten_com = self.rezultat_chteniya_com.split('_')
+            if len(sortirovka_rez_chten_com) == 3:
+                self.t = ''.join(sortirovka_rez_chten_com[1])
+                self.v = ''.join(sortirovka_rez_chten_com[2])
+                self.drow_lable_t_and_v()
+            else:
+                self.start_stop_zhach.set(False)
+                self.nazhali_stop()
+        else:
+            self.start_stop_zhach.set(False)
+            self.nazhali_stop()
+
+    def drow_lable_t_and_v (self):
+        idex_t = 'C°'
+        idex_v = '%'
+        color_lb_t = '#4BC98A'
+        color_lb_v = '#6CB1DE'
+        color_lb_t_2 = '#D0521D'
+        color_lb_v_2 = '#3053B6'
+        color_lb_t_3 = '#3261E1'
+        color_lb_v_3 = '#CA9443'
+        color_font = "#000000"
+        t1 = float(self.t)
+        v1 = float(self.v)
+        if 26.0 > t1 > 17.0:
+            self.lable_t = draw_lable(self.t, color_lb_t, color_font, idex_t)
+        elif t1 >= 26.00:
+            self.lable_t = draw_lable(t, color_lb_t_2, color_font, idex_t)
+        elif t1 <= 17.00:
+            self.lable_t = draw_lable(t, color_lb_t_3, color_font, idex_t)
+        if 80.0 > v1 > 20.0:
+            self.lable_v = draw_lable(v, color_lb_v, color_font, idex_v)
+        elif v1 >= 80.0:
+            self.lable_v = draw_lable(v, color_lb_v_2, color_font, idex_v)
+        elif v1 <= 20.0:
+            self.lable_v = draw_lable(v, color_lb_v_3, color_font, idex_v)
+        self.lable_t.grid(row=1, column=1, stick='wens', padx=20, pady=10)
+        self.lable_v.grid(row=1, column=0, stick='wens', padx=20, pady=10)
+
+
+
 
     def otslezhivanie_nazhatiya_start_stop(self):
         start_or_stop_zbach=self.start_stop_zhach.get()
         print(start_or_stop_zbach)
+        if self.loop_start_stop:
+            self.win.after_cancel(self.loop_start_stop)
         if start_or_stop_zbach:
             self.nazhali_start()
+            if self.loop_start_stop:
+                print(self.loop_start_stop)
+            self.loop_start_stop = self.win.after(10000, self.otslezhivanie_nazhatiya_start_stop)
         else:
             self.nazhali_stop()
-
 
     def run(self):
         self.vibor_com_porta()
