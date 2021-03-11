@@ -51,7 +51,7 @@ def chtenie_porta(select_com) :
        return x
    except (OSError, serial.SerialException) as osh:
        print(osh)
-       pass
+       return None
 
 def sotr_temp_and_vlazh(spis, triger):
     param = None
@@ -95,8 +95,8 @@ def remuve_lable():
     global lable_t
     print(lable_t, lable_t)
     if lable_v and lable_t != None:
-        lable_v.grid_forget()
-        lable_t.grid_forget()
+        lable_v.destroy()
+        lable_t.destroy()
 
 def nazhali_stop():
     global loopp
@@ -120,9 +120,7 @@ def nazhali_start():
     if rezultat_chteniya_com == None:
         nazhali_stop()
     else:
-        if lable_v and lable_t != None:
-            lable_v.grid_remove()
-            lable_t.grid_remove()
+        remuve_lable()
         triger_t = '*'
         triger_v = '%'
         t = sotr_temp_and_vlazh(rezultat_chteniya_com, triger_t)

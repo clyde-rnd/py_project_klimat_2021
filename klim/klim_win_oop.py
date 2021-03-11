@@ -19,6 +19,8 @@ class WindowKlim:
         self.win.grid_columnconfigure(1, minsize=220)
         self.win.grid_rowconfigure(1, minsize=220)
         self.win.grid_rowconfigure(0, minsize=10)
+        self.lable1=False
+        self.loop_start_stop=False
 
     def button_start_stop_drow(self):
         self.start_stop_text = tk.StringVar()
@@ -31,7 +33,7 @@ class WindowKlim:
                                       offvalue=False,
                                       width=6,
                                       highlightcolor='#1183CE', font=('Arial', 15, 'bold'),
-                                      indicatoron=0)
+                                      indicatoron=0, command=self.otslezhivanie_nazhatiya_start_stop)
         self.start_button.grid(row=0, column=1, stick='w', padx=20, pady=10)
 
     def vibor_com_porta(self):
@@ -49,12 +51,52 @@ class WindowKlim:
         self.combo_com.current(self.poumolchaniu_com)
         self.combo_com.grid(row=0, column=0, stick='wens', padx=20, pady=10)
 
+    def draw_lable(self, text_param, color_lb, color_font, idex):
+        lable=tk.Label(self.win, text=f"{text_param} {idex}",
+                         bg=color_lb,
+                         fg=color_font,
+                         font=('Arial', 25, 'bold'),
+                 )
+        return lable
+    def destroy_lable(self):
+        if self.lable1:
+            self.lable1.destroy()
+        else:
+            pass
+
+    def nazhali_stop(self):
+        self.win.after_cancel(self.loop_start_stop)
+        self.destroy_lable()
+        self.vibor_com_porta()
+        self.start_stop_text.set('Start')
+        self.combo_com['state'] = 'NORMAL'
+        print('Нажали кнопку STOP')
+
+    def nazhali_start(self):
+        self.destroy_lable()
+        self.start_stop_text.set("Stop")
+        self.combo_com['state'] = 'disabled'
+        self.lable1 = self.draw_lable("Мой лйбл", '#4BC98A', "#000000", "27")
+        self.lable1.grid(row=1, column=0, stick='wens', padx=20, pady=10)
+        print('Нажали кнопку START')
+        if self.loop_start_stop:
+            print(self.loop_start_stop)
+        self.loop_start_stop = self.win.after(10000, self.otslezhivanie_nazhatiya_start_stop)
+
+    def otslezhivanie_nazhatiya_start_stop(self):
+        start_or_stop_zbach=self.start_stop_zhach.get()
+        print(start_or_stop_zbach)
+        if start_or_stop_zbach:
+            self.nazhali_start()
+        else:
+            self.nazhali_stop()
+
+
     def run(self):
         self.vibor_com_porta()
         self.button_start_stop_drow()
-        self.start_stop_zhach.get()
-        print(self.start_stop_zhach.get())
         self.win.mainloop()
+
 
 if __name__ == "__main__":
     window = WindowKlim()
