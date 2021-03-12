@@ -53,19 +53,20 @@ class WindowKlim:
         self.combo_com.grid(row=0, column=0, stick='wens', padx=20, pady=10)
 
     def chtenie_com_porta(self, select_com):
+        print(select_com)
         try:
             serial_port_read = serial.Serial(
                 port=select_com,
                 baudrate=9600,
                 parity=serial.PARITY_ODD,
                 stopbits=serial.STOPBITS_TWO,
-                bytesize=serial.SEVENBITS, timeout=1
+                bytesize=serial.SEVENBITS, timeout=4
             )
             print(serial_port_read)
             data_serial = serial_port_read.readline()
             print(data_serial)
             serial_port_read.close()
-            return '_27.0_ b _45.0_'
+            return  str(data_serial)
         except (OSError, serial.SerialException) as oshimka_chteniya_com:
             print(oshimka_chteniya_com)
             return False
@@ -99,13 +100,14 @@ class WindowKlim:
         self.start_stop_text.set("Stop")
         self.combo_com['state'] = 'disabled'
         self.select_com = self.combo_com.get()
+        print(self.select_com)
         self.rezultat_chteniya_com = self.chtenie_com_porta(self.select_com)
         if self.rezultat_chteniya_com:
             sortirovka_rez_chten_com = self.rezultat_chteniya_com.split('_')
             print(sortirovka_rez_chten_com)
-            if len(sortirovka_rez_chten_com) == 5:
-                self.t = ''.join(sortirovka_rez_chten_com[1])
-                self.v = ''.join(sortirovka_rez_chten_com[3])
+            if len(sortirovka_rez_chten_com) == 6:
+                self.t = ''.join(sortirovka_rez_chten_com[4])
+                self.v = ''.join(sortirovka_rez_chten_com[2])
                 self.drow_lable_t_and_v()
             else:
                 self.start_stop_zhach.set(False)
@@ -137,7 +139,7 @@ class WindowKlim:
         elif v1 >= 80.0:
             self.lable_v = self.draw_lable(self.v, color_lb_v_2, color_font, idex_v)
         elif v1 <= 20.0:
-            self.lable_v = self.draw_lable(v, color_lb_v_3, color_font, idex_v)
+            self.lable_v = self.draw_lable(self.v, color_lb_v_3, color_font, idex_v)
         self.lable_t.grid(row=1, column=1, stick='wens', padx=20, pady=10)
         self.lable_v.grid(row=1, column=0, stick='wens', padx=20, pady=10)
 
